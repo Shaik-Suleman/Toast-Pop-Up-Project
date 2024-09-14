@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            height: 100%;
+            /* position: relative; */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        body h1{
+            background:linear-gradient( yellow, orangered );
+            background-clip: text;
+            color: transparent;
+        }
+
+        .main {
+            /* height: 100%;    */
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .toast-container {
+            /* height: 100%; */
+            /* margin-top: 50%; */
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            /* background-color: pink; */
+            padding: 5px 10px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            animation: fromleft 0.2s ease;
+        }
+
+        .toast-container.right {
+            top: 1rem;
+            left: auto;
+            right: 1rem;
+        }
+        .toast-container.right .toast {
+            animation: fromright 0.2s ease;
+        }
+
+        .toast-container.bottom {
+            /* right: 1rem; */
+            top: auto;
+            bottom: 1rem;
+        }
+
+        .go-left{
+            animation: toleft 0.2s ease forwards;
+        }
+        .toast-container.right .toast.go-right{
+            animation: toright 0.2s ease forwards;
+        }
+        @keyframes fromleft {
+            from{
+                transform: translateX(-100%);
+            }
+            to{
+                transform: translateX(0);
+            }
+        }
+        @keyframes toleft {
+            from{
+                transform: translateX(0);
+            }
+            to{
+                transform: translateX(-100%);
+            }
+        }
+        @keyframes fromright {
+            from{
+                transform: translateX(100%);
+            }
+            to{
+                transform: translateX(0);
+            }
+        }
+        @keyframes toright {
+            from{
+                transform: translateX(0);
+            }
+            to{
+                transform: translateX(100%);
+            }
+        }
+        /* .toast::after {
+            content: "❎";
+        } */
+
+        .success::before {
+            content: "✔️";
+        }
+
+        .error::before {
+            content: "❌";
+        }
+
+        .warning::before {
+            content: "⚠️";
+        }
+
+        .info::before {
+            content: "ℹ️ℹ️ℹ️";
+        }
+
+        .success {
+            background-color: greenyellow;
+        }
+
+        .error {
+            background-color: lightcoral;
+        }
+
+        .warning {
+            background-color: orange;
+        }
+
+        .info {
+            background-color: lightblue;
+        }
+
+        button {
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .toast span {
+            cursor: pointer;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Toast Popup</h1>
+    <div class="main">
+        <select name="" id="" class="horizontal-position">
+            <option value="left">Left</option>
+            <option value="right">Right</option>
+        </select>
+        <select name="" id="" class="vertical-position">
+            <option value="top">Top</option>
+            <option value="bottom">Bottom</option>
+        </select>
+        <select name="" id="" class="toast_type">
+            <option value="success">Success</option>
+            <option value="error">Error</option>
+            <option value="warning">Warning</option>
+            <option value="info">Info</option>
+        </select>
+        <input type="text" class="toast_msg" value="This is a Toast Massage!">
+        Duration:-<input type="range" class="duration" min="1" max="10" value="5">
+        <button>Show Toast</button>
+    </div>
+    <div class="toast-container">
+        <!-- <div class="toast success"><span>✔️</span>This is a Toast Massage! <span>&Otimes;</span></div>
+        <div class="toast erorr"><span>❌</span>This is a Toast Massage! <span>&Otimes;</span></div>
+        <div class="toast warning"><span>⚠️</span>This is a Toast Massage! <span>&Otimes;</span></div>
+        <div class="toast info"><span>ℹ️ℹ️ℹ️</span>  This is a Toast Massage! <span>&Otimes;</span></div> -->
+    </div>
+    <script>
+        let btn = document.querySelector("button")
+        // let success=document.querySelector(".success")
+        // let erorr=document.querySelector(".erorr")
+        // let warning=document.querySelector(".warning")
+        // let info=document.querySelector(".info")
+        let horizotal_position = document.querySelector(".horizontal-position")
+        let vertical_position = document.querySelector(".vertical-position")
+        let toast_container = document.querySelector(".toast-container")
+        let toast = document.querySelectorAll(".toast")
+        let toast_type = document.querySelector(".toast_type")
+        let toast_msg = document.querySelector(".toast_msg")
+        let duration=document.querySelector(".duration")
+
+
+        btn.addEventListener("click", () => {
+
+            if (horizotal_position.value === "right") {
+                toast_container.classList.add("right")
+            }
+            else {
+                toast_container.classList.remove("right")
+            }
+            if (vertical_position.value === "bottom") {
+                toast_container.classList.add("bottom")
+            }
+            else {
+                toast_container.classList.remove("bottom")
+            }
+
+            let new_toast = document.createElement("div")
+            new_toast.classList.add("toast")
+            toast_container.append(new_toast)
+            new_toast.classList.add(toast_type.value)
+            new_toast.innerHTML = `${toast_msg.value}`
+            let span =document.createElement("span")
+            span.innerText="❎"
+            new_toast.append(span) 
+
+
+            function removetoast(){
+               if(toast_container.classList.contains("right")){
+                new_toast.classList.add("go-right")
+               }
+               else{
+                   new_toast.classList.add("go-left")
+                 }
+                setTimeout(()=>{
+                    new_toast.remove()
+                },200)
+            }
+            span.addEventListener("click",()=>{
+                removetoast()
+            })
+            setTimeout(()=>{
+               removetoast()
+            },Number(duration.value)*1000)
+
+            
+        })
+
+
+    </script>
+</body>
+
+</html>
